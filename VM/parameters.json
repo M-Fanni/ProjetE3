@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "francecentral"
+        },
+        "networkInterfaceName": {
+            "value": "managementvm734"
+        },
+        "networkSecurityGroupName": {
+            "value": "managementVM-nsg"
+        },
+        "networkSecurityGroupRules": {
+            "value": [
+                {
+                    "name": "default-allow-ssh",
+                    "properties": {
+                        "priority": 1000,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "22"
+                    }
+                }
+            ]
+        },
+        "subnetName": {
+            "value": "Projetsubnet"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/a56b3c84-41d2-4098-9f47-ebac80306f63/resourceGroups/EstiamDBProjet/providers/Microsoft.Network/virtualNetworks/EstiamPVNetwork"
+        },
+        "virtualMachineName": {
+            "value": "managementVM"
+        },
+        "virtualMachineComputerName": {
+            "value": "managementVM"
+        },
+        "virtualMachineRG": {
+            "value": "EstiamDBProjet"
+        },
+        "osDiskType": {
+            "value": "Standard_LRS"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_B2s"
+        },
+        "adminUsername": {
+            "value": "mathieu"
+        },
+        "adminPassword": {
+            "value": null
+        }
+    }
+}
