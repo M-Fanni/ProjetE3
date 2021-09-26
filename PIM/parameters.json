@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_LAN1_name": {
+            "value": "LAN1"
+        },
+        "networkInterfaces_adclientnic_name": {
+            "value": "adclientnic"
+        },
+        "networkInterfaces_carteclonage_name": {
+            "value": "carteclonage"
+        },
+        "publicIPAddresses_adclientpublic_name": {
+            "value": "adclientpublic"
+        },
+        "publicIPAddresses_leclonagepublic_name": {
+            "value": "leclonagepublic"
+        },
+        "networkSecurityGroups_Ouvertureentrees_name": {
+            "value": "Ouvertureentrees"
+        }
+    }
+}
