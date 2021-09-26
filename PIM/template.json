@@ -1,38 +1,13 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "virtualNetworks_LAN1_name": {
-            "defaultValue": "LAN1",
-            "type": "String"
-        },
-        "networkInterfaces_addcnic_name": {
-            "defaultValue": "addcnic",
-            "type": "String"
-        },
-        "networkInterfaces_adclientnic_name": {
-            "defaultValue": "adclientnic",
-            "type": "String"
-        },
-        "publicIPAddresses_adclientpublic_name": {
-            "defaultValue": "adclientpublic",
-            "type": "String"
-        },
-        "publicIPAddresses_leclonagepublic_name": {
-            "defaultValue": "leclonagepublic",
-            "type": "String"
-        },
-        "networkSecurityGroups_Ouvertureentrees_name": {
-            "defaultValue": "Ouvertureentrees",
-            "type": "String"
-        }
-    },
+    "parameters": {},
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('networkSecurityGroups_Ouvertureentrees_name')]",
+            "name": "Ouvertureentrees",
             "location": "francecentral",
             "properties": {
                 "securityRules": [
@@ -78,7 +53,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('publicIPAddresses_adclientpublic_name')]",
+            "name": "adclientpublic",
             "location": "francecentral",
             "sku": {
                 "name": "Standard",
@@ -105,34 +80,24 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('publicIPAddresses_leclonagepublic_name')]",
+            "name": "addcpublic",
             "location": "francecentral",
             "sku": {
                 "name": "Standard",
                 "tier": "Regional"
             },
-            "zones": [
-                "3",
-                "1",
-                "2"
-            ],
             "properties": {
-                "ipAddress": "20.47.80.100",
+                "ipAddress": "40.89.131.246",
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "Static",
                 "idleTimeoutInMinutes": 4,
-                "ipTags": [
-                    {
-                        "ipTagType": "RoutingPreference",
-                        "tag": "Internet"
-                    }
-                ]
+                "ipTags": []
             }
         },
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('virtualNetworks_LAN1_name')]",
+            "name": "LAN1",
             "location": "francecentral",
             "properties": {
                 "addressSpace": {
@@ -158,9 +123,9 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2020-11-01",
-            "name": "[concat(parameters('networkSecurityGroups_Ouvertureentrees_name'), '/RDPOk')]",
+            "name": "Ouvertureentrees/RDPOk",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'Ouvertureentrees')]"
             ],
             "properties": {
                 "description": "Le RDP est ouvert",
@@ -181,9 +146,9 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2020-11-01",
-            "name": "[concat(parameters('networkSecurityGroups_Ouvertureentrees_name'), '/SSHOk')]",
+            "name": "Ouvertureentrees/SSHOk",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'Ouvertureentrees')]"
             ],
             "properties": {
                 "description": "SSH ouvert",
@@ -204,9 +169,9 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2020-11-01",
-            "name": "[concat(parameters('virtualNetworks_LAN1_name'), '/SOUSRESEAU')]",
+            "name": "LAN1/SOUSRESEAU",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_LAN1_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'LAN1')]"
             ],
             "properties": {
                 "addressPrefix": "192.168.0.0/24",
@@ -218,46 +183,12 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('networkInterfaces_addcnic_name')]",
+            "name": "adclientnic",
             "location": "francecentral",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAddress": "192.168.0.4",
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]"
-                            },
-                            "primary": true,
-                            "privateIPAddressVersion": "IPv4"
-                        }
-                    }
-                ],
-                "dnsSettings": {
-                    "dnsServers": []
-                },
-                "enableAcceleratedNetworking": false,
-                "enableIPForwarding": false,
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2020-11-01",
-            "name": "[parameters('networkInterfaces_adclientnic_name')]",
-            "location": "francecentral",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_adclientpublic_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'adclientpublic')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'LAN1', 'SOUSRESEAU')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'Ouvertureentrees')]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -267,10 +198,10 @@
                             "privateIPAddress": "192.168.0.5",
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_adclientpublic_name'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'adclientpublic')]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'LAN1', 'SOUSRESEAU')]"
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
@@ -283,7 +214,45 @@
                 "enableAcceleratedNetworking": false,
                 "enableIPForwarding": false,
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Ouvertureentrees')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "addcnic",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'addcpublic')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'LAN1', 'SOUSRESEAU')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'Ouvertureentrees')]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "192.168.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'addcpublic')]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'LAN1', 'SOUSRESEAU')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Ouvertureentrees')]"
                 }
             }
         }
