@@ -6,12 +6,12 @@
             "defaultValue": "LAN1",
             "type": "String"
         },
-        "networkInterfaces_adclientnic_name": {
-            "defaultValue": "adclientnic",
+        "networkInterfaces_addcnic_name": {
+            "defaultValue": "addcnic",
             "type": "String"
         },
-        "networkInterfaces_carteclonage_name": {
-            "defaultValue": "carteclonage",
+        "networkInterfaces_adclientnic_name": {
+            "defaultValue": "adclientnic",
             "type": "String"
         },
         "publicIPAddresses_adclientpublic_name": {
@@ -218,10 +218,9 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('networkInterfaces_adclientnic_name')]",
+            "name": "[parameters('networkInterfaces_addcnic_name')]",
             "location": "francecentral",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_adclientpublic_name'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
             ],
@@ -230,11 +229,8 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAddress": "192.168.0.5",
+                            "privateIPAddress": "192.168.0.4",
                             "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_adclientpublic_name'))]"
-                            },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]"
                             },
@@ -256,25 +252,22 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2020-11-01",
-            "name": "[parameters('networkInterfaces_carteclonage_name')]",
+            "name": "[parameters('networkInterfaces_adclientnic_name')]",
             "location": "francecentral",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_leclonagepublic_name'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_adclientpublic_name'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_Ouvertureentrees_name'))]"
             ],
-            "tags": {
-                "nic1": ""
-            },
             "properties": {
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAddress": "192.168.0.4",
+                            "privateIPAddress": "192.168.0.5",
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_leclonagepublic_name'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_adclientpublic_name'))]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_LAN1_name'), 'SOUSRESEAU')]"
